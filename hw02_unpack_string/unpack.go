@@ -78,6 +78,11 @@ func Unpack(input string) (string, error) {
 		repeatChar = ""
 	}
 
+	// В случае если есть символ экранирования в конце
+	if nextCharEscape {
+		return "", ErrInvalidString
+	}
+
 	// last char
 	unpucked.WriteString(repeatChar)
 
