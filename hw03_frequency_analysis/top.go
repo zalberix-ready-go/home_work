@@ -1,8 +1,6 @@
 package hw03frequencyanalysis
 
 import (
-	"fmt"
-	"log"
 	"regexp"
 	"sort"
 	"strings"
@@ -13,17 +11,14 @@ import (
 
 var collateRussian = collate.New(language.Russian)
 
+var re = regexp.MustCompile(`^[^а-яА-ЯёЁa-zA-Z0-9]+|[^а-яА-ЯёЁa-zA-Z0-9]+$`)
+
 func Top10(text string) []string {
 	text = strings.ToLower(text)
 
 	words := strings.Fields(text)
 
-	words, err := normalazeWords(words)
-	if err != nil {
-		log.Panic("normalazed words: %w", err)
-
-		return nil
-	}
+	words = normalazeWords(words)
 
 	frequencyWords := make(map[string]int)
 
@@ -65,7 +60,11 @@ func Top10(text string) []string {
 	}
 
 	if len(topFrequencyWord) > 10 {
-		return topFrequencyWord[:10]
+		top10FrequencyWord := make([]string, 10)
+
+		copy(top10FrequencyWord, topFrequencyWord[:10])
+
+		return top10FrequencyWord
 	}
 
 	return topFrequencyWord
@@ -73,17 +72,7 @@ func Top10(text string) []string {
 
 // Убирает все знаки препинания по бокам
 
-func normalazeWords(words []string) ([]string, error) {
-	var err error
-
-	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("произошла паника при компиляции регулярного выражения: %v", r)
-		}
-	}()
-
-	re := regexp.MustCompile(`^[^а-яА-ЯёЁa-zA-Z0-9]+|[^а-яА-ЯёЁa-zA-Z0-9]+$`)
-
+func normalazeWords(words []string) []string {
 	normalWords := make([]string, 0, len(words))
 
 	for _, word := range words {
@@ -97,5 +86,5 @@ func normalazeWords(words []string) ([]string, error) {
 			normalWords = append(normalWords, word)
 		}
 	}
-	return normalWords, err
+	return normalWords
 }
