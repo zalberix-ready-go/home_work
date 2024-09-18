@@ -9,7 +9,6 @@ import (
 func TestList(t *testing.T) {
 	t.Run("empty list", func(t *testing.T) {
 		l := NewList()
-
 		require.Equal(t, 0, l.Len())
 		require.Nil(t, l.Front())
 		require.Nil(t, l.Back())
@@ -17,6 +16,12 @@ func TestList(t *testing.T) {
 
 	t.Run("complex", func(t *testing.T) {
 		l := NewList()
+
+		// Удаление одного элемента
+		l.PushFront(100) // [100]
+		l.Remove(l.Front())
+		require.Nil(t, l.Front())
+		require.Nil(t, l.Back())
 
 		l.PushFront(10) // [10]
 		l.PushBack(20)  // [10, 20]
